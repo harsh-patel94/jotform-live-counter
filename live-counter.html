@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>Live Jotform Submission Counter</title>
+  <title>Spaces Remaining</title>
   <style>
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -30,7 +30,7 @@
     .value {
       font-size: 40px;
       font-weight: 700;
-      color: #2e7d32;
+      color: #d32f2f;
     }
     .updated {
       margin-top: 8px;
@@ -41,44 +41,42 @@
 </head>
 <body>
   <div class="counter-box">
-    <div class="label">Total submissions</div>
-    <div class="value" id="submissionCount">–</div>
+    <div class="label">Spaces Remaining</div>
+    <div class="value" id="remainingSpaces">–</div>
     <div class="updated" id="updatedAt"></div>
   </div>
 
   <script>
-    const API_KEY = c9e7e63247e20eaad54480e24467909c;
-    const FORM_ID = 261441773949872;
+    const API_KEY = "c9e7e63247e20eaad54480e24467909c";
+    const FORM_ID = "261441773949872";
+    const MAX_SPACES = 80; // Change this number if needed
 
-    async function fetchSubmissionCount() {
+    async function fetchRemainingSpaces() {
       try {
-        const url = `https://api.jotform.com/form/${261441773949872}/submissions?apiKey=${API_KEY}&limit=0`;
+        const url = `https://api.jotform.com/form/${FORM_ID}/submissions?apiKey=${API_KEY}&limit=0`;
         const res = await fetch(url);
         const data = await res.json();
 
-        // Jotform API usually returns count in "resultSet" or "resultSet.count"
-        const count =
+        const submissionCount =
           (data.resultSet && (data.resultSet.count || data.resultSet.total)) ||
           data.count ||
           0;
 
-        document.getElementById("submissionCount").textContent = count;
+        const remaining = Math.max(MAX_SPACES - submissionCount, 0);
+
+        document.getElementById("remainingSpaces").textContent = remaining;
 
         const now = new Date();
         document.getElementById("updatedAt").textContent =
           "Last updated: " + now.toLocaleTimeString();
       } catch (err) {
         console.error(err);
-        document.getElementById("submissionCount").textContent = "Error";
+        document.getElementById("remainingSpaces").textContent = "Error";
       }
     }
 
-    // Initial load
-    fetchSubmissionCount();
-    // Refresh every 15 seconds
-    setInterval(fetchSubmissionCount, 15000);
+    fetchRemainingSpaces();
+    setInterval(fetchRemainingSpaces, 15000);
   </script>
 </body>
 </html>
-
-
