@@ -11,7 +11,7 @@
       justify-content: center;
       height: 100vh;
       margin: 0;
-      background: #ffffff;
+      background: #f5f5f5;
     }
     .counter-box {
       background: #ffffff;
@@ -49,18 +49,16 @@
   <script>
     const API_KEY = "c9e7e63247e20eaad54480e24467909c";
     const FORM_ID = "261441773949872";
-    const MAX_SPACES = 80; // Change this number if needed
+    const MAX_SPACES = 60; // Change this if needed
 
     async function fetchRemainingSpaces() {
       try {
-        const url = `https://api.jotform.com/form/${FORM_ID}/submissions?apiKey=${API_KEY}&limit=0`;
+        const url = `https://api.jotform.com/form/${FORM_ID}?apiKey=${API_KEY}`;
         const res = await fetch(url);
         const data = await res.json();
 
-        const submissionCount =
-          (data.resultSet && (data.resultSet.count || data.resultSet.total)) ||
-          data.count ||
-          0;
+        // Correct submission count
+        const submissionCount = data.content.count || 0;
 
         const remaining = Math.max(MAX_SPACES - submissionCount, 0);
 
